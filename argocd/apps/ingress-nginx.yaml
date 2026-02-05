@@ -13,9 +13,7 @@ spec:
       values: |
         controller:
           admissionWebhooks:
-            enabled: true
-            patch:
-              enabled: true
+            enabled: false
   destination:
     server: https://kubernetes.default.svc
     namespace: ingress-nginx
