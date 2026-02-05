@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/ORG/REPO.git
+    repoURL: https://github.com/brenofrancoa/lab-argocd.git
     targetRevision: main
     path: k8s/overlays/dev
   destination:
