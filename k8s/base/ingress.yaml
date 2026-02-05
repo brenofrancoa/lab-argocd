@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: lab-ingress
+  namespace: lab-devops
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: lab.local
+    http:
+      paths:
+      - path: /bg(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: api-bg
+            port:
+              number: 80
+      - path: /canary(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: api-canary-stable
+            port:
+              number: 80

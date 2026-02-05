@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-blue
+  namespace: lab-devops
+  labels:
+    app.kubernetes.io/name: lab-api
+    color: blue
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: lab-api
+      color: blue
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: lab-api
+        color: blue
+    spec:
+      containers:
+      - name: api
+        image: docker.io/DOCKERHUB_USER/lab-api:v1.0.0
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: app-config
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "300m"
+            memory: "256Mi"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-green
+  namespace: lab-devops
+  labels:
+    app.kubernetes.io/name: lab-api
+    color: green
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: lab-api
+      color: green
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: lab-api
+        color: green
+    spec:
+      containers:
+      - name: api
+        image: docker.io/DOCKERHUB_USER/lab-api:v1.0.0
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: app-config
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "300m"
+            memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-bg
+  namespace: lab-devops
+spec:
+  selector:
+    app.kubernetes.io/name: lab-api
+    color: blue # switch to green to flip traffic
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8000

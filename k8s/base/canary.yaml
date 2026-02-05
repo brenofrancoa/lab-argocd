@@ -1,0 +1,70 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: api-canary
+  namespace: lab-devops
+  labels:
+    app.kubernetes.io/name: lab-api-canary
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: lab-api-canary
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: lab-api-canary
+    spec:
+      containers:
+      - name: api
+        image: docker.io/DOCKERHUB_USER/lab-api:v1.0.0
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: app-config
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "300m"
+            memory: "256Mi"
+  strategy:
+    canary:
+      stableService: api-canary-stable
+      canaryService: api-canary-canary
+      steps:
+      - setWeight: 10
+      - pause: {duration: "1m"}
+      - setWeight: 30
+      - pause: {duration: "1m"}
+      - setWeight: 50
+      - pause: {duration: "1m"}
+      - setWeight: 100
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-canary-stable
+  namespace: lab-devops
+spec:
+  selector:
+    app.kubernetes.io/name: lab-api-canary
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-canary-canary
+  namespace: lab-devops
+spec:
+  selector:
+    app.kubernetes.io/name: lab-api-canary
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8000
