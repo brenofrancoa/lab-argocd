@@ -12,7 +12,7 @@ configMapGenerator:
   behavior: merge
   literals:
   - APP_ENV=dev
-  - APP_VERSION=v1.0.0
+  - APP_VERSION=v1.0.1
 images:
 - name: docker.io/brenofrancoa/lab-api
-  newTag: v1.0.0
+  newTag: v1.0.1
