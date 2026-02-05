@@ -13,7 +13,10 @@ spec:
       values: |
         controller:
           admissionWebhooks:
-            enabled: false
+            enabled: true
+            failurePolicy: Ignore
+            patch:
+              enabled: true
           service:
             type: NodePort
   destination:
