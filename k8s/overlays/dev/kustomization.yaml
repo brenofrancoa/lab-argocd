@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../../base
+patches:
+- path: patch-service-blue.yaml
+configMapGenerator:
+- name: app-config
+  behavior: merge
+  literals:
+  - APP_ENV=dev
+  - APP_VERSION=v1.0.0
+images:
+- name: docker.io/DOCKERHUB_USER/lab-api
+  newTag: v1.0.0
