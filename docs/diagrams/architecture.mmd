@@ -1,7 +1,14 @@
 flowchart LR
   Dev[Developer] -->|git push| Repo[GitHub Repo]
   Repo -->|sync| ArgoCD[ArgoCD]
-  ArgoCD --> App[FastAPI App]
-  ArgoCD --> Rollouts[Argo Rollouts]
-  ArgoCD --> Ingress[Nginx Ingress]
-  ArgoCD --> Mon[Prometheus/Grafana]
+  ArgoCD --> Root[App of Apps]
+  Root --> App[App overlays]
+  Root --> Rollouts[Argo Rollouts]
+  Root --> Ingress[Nginx Ingress]
+  Root --> Mon[Prometheus/Grafana]
+  Root --> Metrics[Metrics Server]
+  App --> K8s[(Kind Cluster)]
+  Rollouts --> K8s
+  Ingress --> K8s
+  Mon --> K8s
+  Metrics --> K8s
